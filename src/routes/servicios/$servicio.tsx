@@ -24,6 +24,33 @@ const SLOTS = ["09:00", "09:40", "10:20", "11:00", "11:40", "12:20", "13:00"];
 
 const EMAIL_DOMAIN = "@usm.cl";
 
+// Definición de profesionales y sus disponibilidades
+const PROFESSIONALS = {
+  "diego-prokes": { name: "Diego Prokes" },
+  "benjamin-soto": { name: "Benjamin Soto" },
+  "julio-urbina": { name: "Julio Urbina" },
+};
+
+// Profesionales disponibles por hora (día de semana: 0=domingo, 1=lunes, 2=martes, 3=miércoles, 4=jueves, 5=viernes, 6=sábado)
+const AVAILABILITY: Record<string, string[]> = {
+  "09:00": ["diego-prokes"],
+  "09:40": ["diego-prokes"],
+  "10:20": ["diego-prokes"],
+  "11:00": ["benjamin-soto"],
+  "11:40": ["julio-urbina"],
+  "12:20": ["julio-urbina"],
+  "13:00": ["julio-urbina"],
+};
+
+// Profesionales que trabajan por día
+const WORK_DAYS: Record<number, string[]> = {
+  1: ["diego-prokes", "benjamin-soto", "julio-urbina"], // lunes
+  2: [], // martes - NO TRABAJAN (no clickeable)
+  3: ["diego-prokes", "benjamin-soto", "julio-urbina"], // miércoles
+  4: ["diego-prokes", "benjamin-soto", "julio-urbina"], // jueves
+  5: ["diego-prokes", "benjamin-soto"], // viernes (sin julio-urbina)
+};
+
 export const Route = createFileRoute("/servicios/$servicio")({
   component: ServicioPage,
   head: ({ params }) => ({
@@ -262,7 +289,8 @@ function BookingPanel({ servicio, session }: { servicio: string; session: Sessio
   const isPastDate = (d: Date) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    return d < today;
+    // Deshabilitar si es pasado o si es martes (día 2)
+    return d < today || d.getDay() === 2;
   };
 
   const handleReservar = async (hora: string) => {
@@ -304,6 +332,17 @@ function BookingPanel({ servicio, session }: { servicio: string; session: Sessio
 
   const dayFull = todayReservas.length >= SLOTS.length;
 
+  // Obtener profesionales disponibles para una hora específica en el día seleccionado
+  const getAvailableProfessionals = (hora: string): string[] => {
+    if (!selectedDate) return [];
+    const dayOfWeek = selectedDate.getDay();
+    const workingProfessionals = WORK_DAYS[dayOfWeek as keyof typeof WORK_DAYS] ?? [];
+    const professionalsByHour = AVAILABILITY[hora] ?? [];
+    
+    // Retornar profesionales que trabajan ese día Y están disponibles en esa hora
+    return professionalsByHour.filter(p => workingProfessionals.includes(p));
+  };
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-8">
       <div className="bg-white rounded-lg shadow p-4 border-t-4 border-[#005a9c]">
@@ -335,8 +374,8 @@ function BookingPanel({ servicio, session }: { servicio: string; session: Sessio
           Horas {selectedDate && `· ${dateKey}`}
         </h3>
         <p className="text-sm text-gray-600 mb-5">
-          Bloques de 40 minutos entre las 9:00 y las 14:00.
-        </p>
+          Bloques de 40 minutos entre las 9:00 y las 14:00. Los martes no hay atención disponible.
+        </p>  
 
         {myReservaToday && (
           <div className="mb-5 p-4 bg-green-50 border border-green-200 rounded-lg flex items-start gap-3">
@@ -369,6 +408,9 @@ function BookingPanel({ servicio, session }: { servicio: string; session: Sessio
           {SLOTS.map((hora) => {
             const taken = todayReservas.find((r) => r.hora.startsWith(hora));
             const isMine = taken?.user_id === session.user.id;
+            const availableProfessionals = getAvailableProfessionals(hora);
+            const hasAvailability = availableProfessionals.length > 0;
+            
             return (
               <div
                 key={hora}
@@ -378,16 +420,23 @@ function BookingPanel({ servicio, session }: { servicio: string; session: Sessio
                     ? isMine
                       ? "bg-green-100 border-green-400 text-green-900"
                       : "bg-red-100 border-red-300 text-red-700"
-                    : "bg-yellow-50 border-yellow-300 text-yellow-900 hover:bg-yellow-100 cursor-pointer",
+                    : hasAvailability
+                    ? "bg-yellow-50 border-yellow-300 text-yellow-900 hover:bg-yellow-100 cursor-pointer"
+                    : "bg-gray-100 border-gray-300 text-gray-500 cursor-not-allowed",
                 )}
                 onClick={() => {
-                  if (!taken && !myReservaToday) handleReservar(hora);
+                  if (!taken && !myReservaToday && hasAvailability) handleReservar(hora);
                 }}
               >
                 {hora}
                 {taken && (
                   <div className="text-[10px] mt-1 uppercase tracking-wide">
                     {isMine ? "Tu reserva" : "Ocupada"}
+                  </div>
+                )}
+                {!taken && hasAvailability && (
+                  <div className="text-[10px] mt-1 text-gray-700">
+                    {availableProfessionals.map(p => PROFESSIONALS[p as keyof typeof PROFESSIONALS]?.name || p).join(", ")}
                   </div>
                 )}
                 {isMine && (
