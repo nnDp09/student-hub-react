@@ -200,6 +200,7 @@ function AuthPanel() {
 }
 
 function BookingPanel({ servicio, session }: { servicio: string; session: Session }) {
+  const title = titles[servicio] ?? servicio;
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [reservas, setReservas] = useState<Reserva[]>([]);
   const [loading, setLoading] = useState(false);
