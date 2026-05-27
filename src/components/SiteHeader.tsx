@@ -13,7 +13,6 @@ export function SiteHeader() {
           </div>
           <div className="hidden md:flex items-center gap-2">
             <span className="opacity-90 mr-2">Emergencias</span>
-            <span className="bg-[#1aa7e8] text-white px-3 py-1 rounded text-xs font-semibold">Portal SIREB</span>
             <span className="bg-[#7ed957] text-[#003b66] px-3 py-1 rounded text-xs font-semibold">Ley 21.790 "Yo Cuido, Yo Estudio"</span>
             <span className="bg-[#f5c518] text-[#003b66] px-3 py-1 rounded text-xs font-semibold">Activación BAES 2026</span>
           </div>
