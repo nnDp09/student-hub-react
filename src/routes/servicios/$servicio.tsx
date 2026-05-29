@@ -305,7 +305,7 @@ function BookingPanel({ servicio, session }: { servicio: string; session: Sessio
     return d < today || d.getDay() === 2;
   };
 
-  const handleReservar = async (hora: string) => {
+  const handleReservar = async (hora: string, profesional_id: string) => {
     if (!dateKey) return;
     setLoading(true);
     try {
@@ -315,6 +315,7 @@ function BookingPanel({ servicio, session }: { servicio: string; session: Sessio
         servicio,
         fecha: dateKey,
         hora,
+        profesional_id,
       });
       if (error) throw error;
       toast.success(`Hora confirmada: ${dateKey} a las ${hora}`);
