@@ -343,7 +343,10 @@ function BookingPanel({ servicio, session }: { servicio: string; session: Sessio
     }
   };
 
-  const dayFull = todayReservas.length >= SLOTS.length;
+  const dayFull = selectedDate
+    ? capacityForDate(selectedDate) > 0 &&
+      todayReservas.length >= capacityForDate(selectedDate)
+    : false;
 
   // Obtener profesionales disponibles para una hora específica en el día seleccionado
   const getAvailableProfessionals = (hora: string): string[] => {
