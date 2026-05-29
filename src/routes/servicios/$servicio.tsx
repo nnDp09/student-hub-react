@@ -419,44 +419,59 @@ function BookingPanel({ servicio, session }: { servicio: string; session: Sessio
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
           {SLOTS.map((hora) => {
-            const taken = todayReservas.find((r) => r.hora.startsWith(hora));
-            const isMine = taken?.user_id === session.user.id;
             const availableProfessionals = getAvailableProfessionals(hora);
+            const slotReservas = todayReservas.filter((r) => r.hora.startsWith(hora));
+            const takenProIds = new Set(slotReservas.map((r) => r.profesional_id));
+            const freePros = availableProfessionals.filter((p) => !takenProIds.has(p));
+            const mineHere = slotReservas.find((r) => r.user_id === session.user.id);
             const hasAvailability = availableProfessionals.length > 0;
-            
+            const fullyTaken = hasAvailability && freePros.length === 0;
+
             return (
               <div
                 key={hora}
                 className={cn(
                   "relative rounded-md p-3 text-center border font-medium",
-                  taken
-                    ? isMine
-                      ? "bg-green-100 border-green-400 text-green-900"
-                      : "bg-red-100 border-red-300 text-red-700"
+                  mineHere
+                    ? "bg-green-100 border-green-400 text-green-900"
+                    : fullyTaken
+                    ? "bg-red-100 border-red-300 text-red-700"
                     : hasAvailability
                     ? "bg-yellow-50 border-yellow-300 text-yellow-900 hover:bg-yellow-100 cursor-pointer"
                     : "bg-gray-100 border-gray-300 text-gray-500 cursor-not-allowed",
                 )}
                 onClick={() => {
-                  if (!taken && !myReservaToday && hasAvailability) handleReservar(hora);
+                  if (!mineHere && !myReservaToday && freePros.length > 0) {
+                    handleReservar(hora, freePros[0]);
+                  }
                 }}
               >
                 {hora}
-                {taken && (
+                {mineHere && (
                   <div className="text-[10px] mt-1 uppercase tracking-wide">
-                    {isMine ? "Tu reserva" : "Ocupada"}
+                    Tu reserva ·{" "}
+                    {PROFESSIONALS[mineHere.profesional_id as keyof typeof PROFESSIONALS]?.name ??
+                      mineHere.profesional_id}
                   </div>
                 )}
-                {!taken && hasAvailability && (
+                {!mineHere && fullyTaken && (
+                  <div className="text-[10px] mt-1 uppercase tracking-wide">Ocupada</div>
+                )}
+                {!mineHere && !fullyTaken && hasAvailability && (
                   <div className="text-[10px] mt-1 text-gray-700">
-                    {availableProfessionals.map(p => PROFESSIONALS[p as keyof typeof PROFESSIONALS]?.name || p).join(", ")}
+                    {freePros
+                      .map(
+                        (p) =>
+                          PROFESSIONALS[p as keyof typeof PROFESSIONALS]?.name ?? p,
+                      )
+                      .join(", ")}
                   </div>
                 )}
-                {isMine && (
+                {mineHere && (
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleCancelar(taken!.id);
+                      handleCancelar(mineHere.id);
                     }}
                     className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-0.5 hover:bg-red-600"
                     title="Cancelar"
