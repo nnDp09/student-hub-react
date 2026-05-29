@@ -275,10 +275,10 @@ function BookingPanel({ servicio, session }: { servicio: string; session: Sessio
   const fullDays = useMemo(() => {
     const days: Date[] = [];
     for (const [fecha, list] of byDate) {
-      if (list.length >= SLOTS.length) {
-        const [y, m, d] = fecha.split("-").map(Number);
-        days.push(new Date(y, m - 1, d));
-      }
+      const [y, m, d] = fecha.split("-").map(Number);
+      const date = new Date(y, m - 1, d);
+      const cap = capacityForDate(date);
+      if (cap > 0 && list.length >= cap) days.push(date);
     }
     return days;
   }, [byDate]);
@@ -286,10 +286,10 @@ function BookingPanel({ servicio, session }: { servicio: string; session: Sessio
   const partialDays = useMemo(() => {
     const days: Date[] = [];
     for (const [fecha, list] of byDate) {
-      if (list.length > 0 && list.length < SLOTS.length) {
-        const [y, m, d] = fecha.split("-").map(Number);
-        days.push(new Date(y, m - 1, d));
-      }
+      const [y, m, d] = fecha.split("-").map(Number);
+      const date = new Date(y, m - 1, d);
+      const cap = capacityForDate(date);
+      if (cap > 0 && list.length > 0 && list.length < cap) days.push(date);
     }
     return days;
   }, [byDate]);
