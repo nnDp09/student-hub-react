@@ -20,6 +20,7 @@ export type Database = {
           fecha: string
           hora: string
           id: string
+          profesional_id: string
           servicio: string
           user_email: string
           user_id: string
@@ -29,6 +30,7 @@ export type Database = {
           fecha: string
           hora: string
           id?: string
+          profesional_id: string
           servicio: string
           user_email: string
           user_id: string
@@ -38,6 +40,7 @@ export type Database = {
           fecha?: string
           hora?: string
           id?: string
+          profesional_id?: string
           servicio?: string
           user_email?: string
           user_id?: string
