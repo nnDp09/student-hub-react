@@ -72,6 +72,18 @@ interface Reserva {
   servicio: string;
   fecha: string;
   hora: string;
+  profesional_id: string;
+}
+
+function capacityForDate(date: Date) {
+  const dow = date.getDay();
+  const working = WORK_DAYS[dow as keyof typeof WORK_DAYS] ?? [];
+  let cap = 0;
+  for (const hora of SLOTS) {
+    const pros = (AVAILABILITY[hora] ?? []).filter((p) => working.includes(p));
+    cap += pros.length;
+  }
+  return cap;
 }
 
 function ServicioPage() {
