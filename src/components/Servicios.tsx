@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Brain, Activity, Smile, Stethoscope } from "lucide-react";
+import { Brain, Activity, Smile, Stethoscope, HandHeart } from "lucide-react";
 
 const servicios = [
   {
@@ -26,6 +26,12 @@ const servicios = [
     icon: Stethoscope,
     desc: "Consulta médica general para diagnóstico, tratamiento y derivación oportuna ante problemas de salud durante el período académico.",
   },
+  {
+    to: "/servicios/bienestar-estudiantil",
+    title: "Bienestar Estudiantil",
+    icon: HandHeart,
+    desc: "Asistente social.",
+  },
 ] as const;
 
 export function Servicios() {
@@ -36,10 +42,13 @@ export function Servicios() {
           Servicios Estudiantiles
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {servicios.map(({ to, title, icon: Icon, desc }) => (
+          {servicios.map(({ to, title, icon: Icon, desc }) => {
+            const servicioId = to.replace("/servicios/", "");
+            return (
             <Link
               key={to}
-              to={to}
+              to="/servicios/$servicio"
+              params = {{servicio: servicioId}}
               className="group bg-white rounded-lg shadow hover:shadow-xl transition-all p-6 border-t-4 border-[#005a9c] flex flex-col"
             >
               <div className="w-14 h-14 rounded-full bg-[#005a9c]/10 text-[#005a9c] grid place-items-center mb-4 group-hover:bg-[#005a9c] group-hover:text-white transition-colors">
@@ -51,7 +60,8 @@ export function Servicios() {
                 Ver más →
               </span>
             </Link>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
