@@ -20,30 +20,30 @@ export type Database = {
           fecha: string
           hora: string
           id: string
+          profesional_id: string
           servicio: string
           user_email: string
           user_id: string
-          profesional_id: string
         }
         Insert: {
           created_at?: string
           fecha: string
           hora: string
           id?: string
+          profesional_id: string
           servicio: string
           user_email: string
           user_id: string
-          profesional_id: string
         }
         Update: {
           created_at?: string
           fecha?: string
           hora?: string
           id?: string
+          profesional_id?: string
           servicio?: string
           user_email?: string
           user_id?: string
-          profesional_id?: string
         }
         Relationships: []
       }
