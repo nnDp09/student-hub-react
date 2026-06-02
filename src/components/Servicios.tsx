@@ -6,31 +6,31 @@ const servicios = [
     to: "/servicios/psicologia",
     title: "Psicología",
     icon: Brain,
-    desc: "Atención psicológica individual orientada al bienestar emocional y al acompañamiento del proceso académico de las y los estudiantes.",
+    desc: "Apoyo emocional y orientación psicológica para estudiantes.",
   },
   {
     to: "/servicios/kinesiologia",
     title: "Kinesiología",
     icon: Activity,
-    desc: "Evaluación y tratamiento kinésico para la prevención y recuperación de lesiones músculo-esqueléticas asociadas a la vida universitaria.",
+    desc: "Evaluación y tratamiento de lesiones y molestias físicas.",
   },
   {
     to: "/servicios/dentista",
     title: "Dentista",
     icon: Smile,
-    desc: "Atención odontológica preventiva y de urgencia, promoviendo la salud bucal de la comunidad estudiantil.",
+    desc: "Atención odontológica preventiva y de urgencia.",
   },
   {
     to: "/servicios/medico-general",
     title: "Médico General",
     icon: Stethoscope,
-    desc: "Consulta médica general para diagnóstico, tratamiento y derivación oportuna ante problemas de salud durante el período académico.",
+    desc: "Consultas médicas, diagnóstico y derivación.",
   },
   {
     to: "/servicios/bienestar-estudiantil",
     title: "Bienestar Estudiantil",
     icon: HandHeart,
-    desc: "Asistente social.",
+    desc: "Apoyo social y orientación para estudiantes.",
   },
 ] as const;
 
