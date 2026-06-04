@@ -36,7 +36,7 @@ const servicios = [
 
 export function Servicios() {
   return (
-    <section className="bg-[#f4f7fa]">
+    <section id="servicios" className="bg-[#f4f7fa]">
       <div className="max-w-7xl mx-auto px-4 py-14">
         <h2 className="text-3xl font-bold text-[#003b66] mb-8 border-l-4 border-[#005a9c] pl-3">
           Servicios Estudiantiles
