@@ -38,7 +38,9 @@ export function SiteHeader() {
             <a href="#" className="hover:text-[#005a9c]">Quiénes somos</a>
             <button className="flex items-center gap-1 hover:text-[#005a9c]">Áreas <ChevronDown size={14} /></button>
             <a href="#" className="hover:text-[#005a9c]">Publicaciones</a>
+            
             <a href="#" className="hover:text-[#005a9c]">Contacto</a>
+            <Link to="/perfil" className="hover:text-[#005a9c] font-medium">Mi Perfil</Link>
           </nav>
         </div>
       </div>
