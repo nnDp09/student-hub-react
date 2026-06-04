@@ -226,6 +226,8 @@ function AuthPanel() {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+
+          <p className="mt-2 text-sm text-gray-500">Debe contener al menos 8 caracteres, una letra mayúscula, un número y un carácter especial.</p>
         </div>
         <Button
           type="submit"
